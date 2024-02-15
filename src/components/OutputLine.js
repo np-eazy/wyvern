@@ -2,8 +2,8 @@ import { debug } from "../styles";
 
 const outputLineStyle = {
     ...debug,
-    borderColor: "#cccccc",
     borderRadius: 4,
+    borderColor: "#cccccc",
     color:  "#888888",
     textAlign: "left",
     // width: "100%",

@@ -6,6 +6,8 @@ import axios from "axios";
 import { parseResponse } from "../utils/parsing";
 const displayStyle = {
     ...debug,
+    borderRadius: 4,
+    margin: 32,
     width: 640,
 }
 
@@ -47,7 +49,19 @@ export const Display = (props) => {
     };
 
     // TEST
-    return (<div style={displayStyle}>
+    return (<div>
+        <div style={displayStyle}>
+            <h3>Environment</h3>
+        {environment && Array.from(environment.keys()).map((keys) => {
+            return (<div>
+                <div>
+                    <OutputLine envKey={keys} environment={environment} showVarName={true} />
+                </div>
+            </div>)
+        })}
+        </div>
+        <div style={displayStyle}>
+            <h3>REPL</h3>
         {lines && lines.map((line) => {
             return (<div>
                 <div>
@@ -57,5 +71,6 @@ export const Display = (props) => {
             </div>)
         })}
         <InputLine contents={""} needsUserInput={true} submitHandler={submitHandler}/>
+    </div>
     </div>);
 }
