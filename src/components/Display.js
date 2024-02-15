@@ -1,12 +1,25 @@
 import { useState } from "react";
 import { InputLine } from "./InputLine";
 import { debug } from "../styles";
-import { evaluate } from "../api/api";
 import { OutputLine } from "./OutputLine";
-
+import axios from "axios";
 const displayStyle = {
     ...debug,
     width: 640,
+}
+    
+
+export const evaluate = async (line, sessionId) => {
+    try {
+        const requestBody = {
+            "code": line,
+            "sessionId": sessionId,
+        }
+        const response = await axios.get(process.env.OPENAPI_URL + "/eval", requestBody);
+        return response;
+    } catch (error) {
+        console.error('Error making Axios call:', error);
+    }
 }
 
 export const Display = (props) => {
@@ -15,9 +28,9 @@ export const Display = (props) => {
     ]);
     const [ outputMappings, setOutputMappings ] = useState(new Map());
 
-    const submitHandler = (inputValue) => {
+    const submitHandler = async (inputValue) => {
         setLines(lines.concat([inputValue]));
-        outputMappings.set(inputValue, evaluate(inputValue));
+        outputMappings.set(inputValue, await evaluate(inputValue));
         setOutputMappings(outputMappings);
     };
 
