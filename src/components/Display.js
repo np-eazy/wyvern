@@ -16,8 +16,7 @@ export const evaluate = async (line, sessionId) => {
             "sessionId": sessionId,
         }
         const response = await axios.post("https://42252c32-b614-4726-adbc-c12798ee0cf6-00-keyi8mxeqtv7.riker.replit.dev/eval", requestBody);
-        const parsedResponse = parseResponse(response);
-        return parsedResponse;
+        return response;
     } catch (error) {
         console.error('Error making Axios call:', error);
     }
@@ -25,31 +24,35 @@ export const evaluate = async (line, sessionId) => {
 
 export const Display = (props) => {
     const [lines, setLines] = useState([]);
-    const [ outputMappings, setOutputMappings ] = useState(new Map());
+    const [ outputMappings, setOutputMappings ] = useState(new Map()); // Only the roots, which are what are rendered
+    const [ environment, setEnvironment ] = useState(new Map()); // 
+
 
     const submitHandler = async (inputValue) => {
-        setLines(lines.concat([inputValue]));
-        const evaluations = await evaluate(inputValue, "public");
-        console.log(evaluations);
+        const response = await evaluate(inputValue, props.sessionId); // API call
+        const newEnvironment = new Map(environment); 
+        // Add all seria
+            
+        // Add root to outputMappings for rendering later
         const newOutputMappings = new Map(outputMappings);
-        newOutputMappings.set(inputValue, evaluations);
+        newOutputMappings.set(environment.get(response["data"]["root"]), parseResponse(response["data"]["serialized"], response["data"]["root"], newEnvironment)); 
 
+        lines.push([inputValue, response["data"]["root"]])
+
+        setLines(lines);
         setOutputMappings(newOutputMappings);
+        setEnvironment(newEnvironment);
     };
 
     // TEST
     return (<div style={displayStyle}>
         {lines && lines.map((line) => {
+            console.log(line, line[1])
             return (<div>
                 <div>
-                    <InputLine contents={line} needsUserInput={false} submitHandler={() => {}} />
+                    <InputLine contents={line[0]} needsUserInput={false} submitHandler={() => {}} />
+                    <OutputLine envKey={line[1]} environment={environment} />
                 </div>
-                {(outputMappings && outputMappings.get(line) && outputMappings.get(line).length > 0) ? <div>
-                    {outputMappings.get(line).map((element) => {
-                        console.log(element);
-                        return (<OutputLine element={element} />);
-                    })}
-                </div> : <div></div>}
             </div>)
         })}
         <InputLine contents={""} needsUserInput={true} submitHandler={submitHandler}/>

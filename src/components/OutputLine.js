@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import { debug } from "../styles";
 
 const outputLineStyle = {
@@ -13,41 +12,52 @@ const outputLineStyle = {
     fontSize: 12,
 }
 
-export const OutputLine = ({ element }) => {
-    if (element.type == "array") {
-        return (
-            <div style={outputLineStyle}>
-                {element.value} 
-            </div>
-        );
-    } else if (element.type == "boolean") { // Primitive
-        return (
-            <div style={outputLineStyle}>
-                {element.value ? "true" : "false"} 
-            </div>
-        );
-    } else if (element.type == "number") { // Primitive
-        return (
-            <div style={outputLineStyle}>
-                {element.value} 
-            </div>
-        );
-    } else if (element.type == "undefined") { // Primitive
-        return (
-            <div style={outputLineStyle}>
-                {"undefined"} 
-            </div>
-        );
-    } else if (element.type == "error") { // Primitive
-        return (
-            <div style={outputLineStyle}>
-                {"Error: " + element.value["message"]} 
-            </div>
-        );
+export const OutputLine = ({ envKey, environment }) => {
+    if (environment && environment.get(envKey)) {
+        const element = environment.get(envKey);
+        if (element.type == "array") {
+            return (
+                <div style={outputLineStyle}>
+                    {element.value.map((value) => {
+                        return <OutputLine envKey={value} environment={environment} />;
+                    })}
+                </div>
+            );
+        } else if (element.type == "boolean") { // Primitive
+            return (
+                <div style={outputLineStyle}>
+                    {element.value ? "true" : "false"} 
+                </div>
+            );
+        } else if (element.type == "number") { // Primitive
+            return (
+                <div style={outputLineStyle}>
+                    {element.value} 
+                </div>
+            );
+        } else if (element.type == "undefined") { // Primitive
+            return (
+                <div style={outputLineStyle}>
+                    {"undefined"} 
+                </div>
+            );
+        } else if (element.type == "error") { // Primitive
+            return (
+                <div style={outputLineStyle}>
+                    {"Error: " + element.value["message"]} 
+                </div>
+            );
+        } else {
+            return (
+                <div style={outputLineStyle}>
+                    {element.value} 
+                </div>
+            );
+        }
     } else {
         return (
             <div style={outputLineStyle}>
-                {element.value} 
+                {"Error: reference not found"} 
             </div>
         );
     }
