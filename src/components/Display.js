@@ -30,18 +30,20 @@ export const Display = (props) => {
 
     const submitHandler = async (inputValue) => {
         const response = await evaluate(inputValue, props.sessionId); // API call
-        const newEnvironment = new Map(environment); 
-        // Add all seria
-            
-        // Add root to outputMappings for rendering later
-        const newOutputMappings = new Map(outputMappings);
-        newOutputMappings.set(environment.get(response["data"]["root"]), parseResponse(response["data"]["serialized"], response["data"]["root"], newEnvironment)); 
-
-        lines.push([inputValue, response["data"]["root"]])
-
-        setLines(lines);
-        setOutputMappings(newOutputMappings);
-        setEnvironment(newEnvironment);
+        if (response) {
+            const newEnvironment = new Map(environment); 
+            // Add all seria
+                
+            // Add root to outputMappings for rendering later
+            const newOutputMappings = new Map(outputMappings);
+            newOutputMappings.set(environment.get(response["data"]["root"]), parseResponse(response["data"]["serialized"], response["data"]["root"], newEnvironment)); 
+    
+            lines.push([inputValue, response["data"]["root"]])
+    
+            setLines(lines);
+            setOutputMappings(newOutputMappings);
+            setEnvironment(newEnvironment);
+        }
     };
 
     // TEST

@@ -4,8 +4,8 @@ import { debug } from "../styles";
 const inputLineStyle = {
     ...debug,
     textAlign: "left",
+    borderRadius: 4,
     // width: "100%",
-    height: 20,
     margin: 2,
     paddingLeft: 5,
     paddingTop: 2,

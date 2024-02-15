@@ -2,14 +2,15 @@ import { debug } from "../styles";
 
 const outputLineStyle = {
     ...debug,
-    borderColor: "#aaaaaa",
-    color:  "#555555",
+    borderColor: "#cccccc",
+    borderRadius: 4,
+    color:  "#888888",
     textAlign: "left",
     // width: "100%",
     margin: 2,
-    paddingLeft: 5,
-    paddingTop: 2,
-    paddingBottom: 2,
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
     fontSize: 12,
 }
 
