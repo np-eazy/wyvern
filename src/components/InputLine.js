@@ -30,7 +30,6 @@ export const InputLine = ({ contents, needsUserInput, submitHandler }) => {
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            console.log(submitHandler);
             submitHandler(inputValue); // Call the submitHandler function with the current input value
             setInputValue(''); // Optionally clear the input after submission
         }

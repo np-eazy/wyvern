@@ -7,7 +7,6 @@ const displayStyle = {
     ...debug,
     width: 640,
 }
-    
 
 export const evaluate = async (line, sessionId) => {
     try {
@@ -15,11 +14,22 @@ export const evaluate = async (line, sessionId) => {
             "code": line,
             "sessionId": sessionId,
         }
-        const response = await axios.get(process.env.OPENAPI_URL + "/eval", requestBody);
-        return response;
+        const response = await axios.post("https://42252c32-b614-4726-adbc-c12798ee0cf6-00-keyi8mxeqtv7.riker.replit.dev/eval", requestBody);
+        const parsedResponse = parseResponse(response);
+        console.log(JSON.stringify(parsedResponse));
+        return JSON.stringify(parsedResponse);
     } catch (error) {
         console.error('Error making Axios call:', error);
     }
+}
+
+export const parseResponse = (response) => {
+    const items = [];
+    const serialized = response["data"]["serialized"];
+    for (let key in serialized) {
+        items.push(key + ": " + JSON.stringify(serialized[key]) + ", ");
+    }
+    return items;
 }
 
 export const Display = (props) => {
@@ -30,8 +40,12 @@ export const Display = (props) => {
 
     const submitHandler = async (inputValue) => {
         setLines(lines.concat([inputValue]));
-        outputMappings.set(inputValue, await evaluate(inputValue));
-        setOutputMappings(outputMappings);
+        const evaluation = await evaluate(inputValue, "abcde");
+
+        const newOutputMappings = new Map(outputMappings);
+        newOutputMappings.set(inputValue, evaluation);
+
+        setOutputMappings(newOutputMappings);
     };
 
     // TEST
