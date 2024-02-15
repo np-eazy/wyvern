@@ -47,7 +47,6 @@ export const Display = (props) => {
     // TEST
     return (<div style={displayStyle}>
         {lines && lines.map((line) => {
-            console.log(line, line[1])
             return (<div>
                 <div>
                     <InputLine contents={line[0]} needsUserInput={false} submitHandler={() => {}} />
